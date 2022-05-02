@@ -28,17 +28,13 @@ class Board:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if pygame.mouse.get_pressed()[1]:
-                        array_xy = pygame.mouse.get_pos()
-                    elif pygame.mouse.get_pressed()[3]:
-                        toggle_flag = pygame.mouse.get_pressed()[3]
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    array_xy = pygame.mouse.get_pos()
+                    toggle_flag = pygame.mouse.get_pressed()[2]
                     self.define_action(array_xy, toggle_flag)
             self.print_board()
             pygame.display.flip()
             if self.win:
-                victory_jingle = pygame.mixer.Sound("win.wav")
-                victory_jingle.play()
                 sleep(5)
                 run = False
         pygame.quit()         
@@ -98,6 +94,7 @@ class Board:
                 tile_xy = (row,col)
                 neighbors = self.get_neighbors(tile_xy)
                 tile.set_neighbors(neighbors)
+        return self.array
 
     def get_neighbors(self, tile_xy):
         # This will generate a list of neighbors relative to the incoming tile position
@@ -159,11 +156,11 @@ class Board:
     def define_action(self, array_xy, toggle_flag):
         if self.game_over:
             return
-        pos = (array_xy[1] // self.tilesize[1],\
-               array_xy[0] // self.tilesize[0])
-        tile = self.array[pos]
+        tile_xy = (array_xy[1] // self.tilesize[1],\
+                   array_xy[0] // self.tilesize[0])
+        tile = self.get_tile(tile_xy)
         ###########################################
-        if tile.get_revealed() or (not toggle_flag and tile.get_flagged):
+        if tile.get_revealed() or (not toggle_flag and tile.get_flagged()):
             return
         elif toggle_flag:
             tile.set_flag()
@@ -186,7 +183,9 @@ class Tile:
     def __init__(self, boom):
         self.boom = boom
         self.revealed = False
-        self.flagged = False 
+        self.flagged = False
+        self.mine_around = 0
+        self.neighbors = [] 
 
     def get_boom(self):
         return self.boom
@@ -194,7 +193,6 @@ class Tile:
     # This add the number of mines in the area (3x3) of each tile (centerpiece of the 3x3 area)
     def set_neighbors(self, neighbors):
         self.neighbors = neighbors
-        self.mine_around = 0
         for neighbor in self.neighbors:
             # Check if the tile in question returns True (it is hiding a mine)
             if neighbor.get_boom():
@@ -219,7 +217,7 @@ class Tile:
         return self.neighbors
 
     def __repr__(self):
-        return f"Tile({self.boom},{self.revealed},{self.flagged})"
+        return f"Tile({self.boom})"
 
         
 
