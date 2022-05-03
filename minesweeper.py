@@ -2,8 +2,8 @@ from random import random
 
 class Minesweeper:
 
-    def __init__(self, boardsize=None, bomb_probability=None):
-        self.boardsize, self.prob = self.menu()
+    def __init__(self):
+        self.boardsize, self.prob = self.settings_menu()
         self.game_over = False
         self.game_won = False
         self.clicked_tiles = 0
@@ -11,9 +11,9 @@ class Minesweeper:
         self.board = self.create_board()
         self.set_board_indicators()
 
-    def menu(self):
+    def settings_menu(self):
         print()
-        print("CHOOSE THE BOARD DIMENSION: ")
+        print("CHOOSE THE BOARD DIMENSIONS: ")
         rows = int(input("NUMBER OF ROWS: "))
         cols = int(input("NUMBER OF COLUMNS: "))
         dim = rows, cols
@@ -27,9 +27,9 @@ class Minesweeper:
         if sel == 1:
             bomb_prob = 0.2
         elif sel == 2:
-            bomb_prob = 0.3
+            bomb_prob = 0.35
         else:
-            bomb_prob = 0.4
+            bomb_prob = 0.5
         return dim, bomb_prob  
 
     def start_game(self):
@@ -38,19 +38,50 @@ class Minesweeper:
             self.display()
             ij = input("Enter the tile you want to dig into (row,col): ")
             i,j = ij.split(",")
-            if (i < 1 or j < 1) or\
-               (i > self.boardsize[0] or j > self.boardsize[1]):
+            i = ord(i) - 64
+            j = int(j)
+            if not (0 < i <= self.boardsize[0] and 0 < j <= self.boardsize[1]):
                 print("Tile out of bounds, try again")
                 continue
-            check = self.make_move(i,j)
-            #if not check:
-                #self.game_over = True
-            #if check:
-                #reveal tile 
-            pass 
+            self.make_move(i,j)
+            if self.game_over:
+                print()
+                print("GAME OVER")
+                print(f"{chr(i+64)}{j} was a mine :(")
+                print()
+                self.display()
+                running = False
+            if self.clicked_tiles == self.safe_tiles:
+                print()
+                print("!!! YOU'RE WINNER !!!")
+                print()
+                self.display()
+                running = False 
 
     def make_move(self, i, j):
-        pass
+        if self.board[i][j].clicked:
+            print("You've already dug here, try again")
+            return
+        else:
+            if self.board[i][j].hide_bomb:
+                self.board[i][j].clicked = True
+                self.game_over = True
+            elif self.board[i][j].num_ind > 0:
+                self.board[i][j].clicked = True
+                self.clicked_tiles += 1 
+            elif self.board[i][j].num_ind == 0:
+                self.board[i][j].clicked = True
+                self.recursive_move(i,j)
+    
+    def recursive_move(self, row, col):      
+        for i in range(row-1, row+2):
+            for j in range(col-1, col+2):
+                inbounds = (0 < i <= self.boardsize[0]) and (0 < j <= self.boardsize[1])
+                same = (i == row) and (j == col)
+                if (not same) and inbounds:
+                    if not self.board[i][j].hide_bomb:
+                        self.board[i][j].clicked = True
+                        self.clicked_tiles += 1         
 
     def display(self):
         for row in self.board:
@@ -85,13 +116,10 @@ class Minesweeper:
                 self.board[i][j].num_ind = num_ind
 
     def get_num_bomb_around(self, row, col):
-        num_bomb_around = 0
-        
+        num_bomb_around = 0       
         for i in range(row-1, row+2):
             for j in range(col-1, col+2):
-                # This boolean will be False if one neighbor of the tile doesn't exist
                 inbounds = (0 < i <= self.boardsize[0]) and (0 < j <= self.boardsize[1])
-                # This boolean will be True if the neighbor is actually the tile itself 
                 same = (i == row) and (j == col)
                 if (not same) and inbounds:
                     if self.board[i][j].hide_bomb:
@@ -106,18 +134,19 @@ class Tile:
         self.clicked = False
 
     def __str__(self):
-        #if not self.clicked:
-        #    string = " ◙"
-        #    return string
-        if not self.hide_bomb:
-            if self.num_ind != 0:
-                string = f" {self.num_ind}"
-            else:
-                string = "  "
+        if not self.clicked:
+            string = " ◙"
             return string
-        else: 
-            string = " ☼" 
-            return string
+        else:
+            if not self.hide_bomb:
+                if self.num_ind != 0:
+                    string = f" {self.num_ind}"
+                else:
+                    string = "  "
+                return string
+            else: 
+                string = " ☼" 
+                return string
 
     def __repr__(self):
         return f"Tile({self.hide_bomb},{self.num_ind},{self.clicked})"
