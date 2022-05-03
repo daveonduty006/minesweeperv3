@@ -41,7 +41,9 @@ class Minesweeper:
             i = ord(i) - 64
             j = int(j)
             if not (0 < i <= self.boardsize[0] and 0 < j <= self.boardsize[1]):
+                print()
                 print("Tile out of bounds, try again")
+                print()
                 continue
             self.make_move(i,j)
             if self.game_over:
@@ -60,7 +62,9 @@ class Minesweeper:
 
     def make_move(self, i, j):
         if self.board[i][j].clicked:
+            print()
             print("You've already dug here, try again")
+            print()
             return
         else:
             if self.board[i][j].hide_bomb:
@@ -71,6 +75,7 @@ class Minesweeper:
                 self.clicked_tiles += 1 
             elif self.board[i][j].num_ind == 0:
                 self.board[i][j].clicked = True
+                self.clicked_tiles += 1
                 self.recursive_move(i,j)
     
     def recursive_move(self, row, col):      
@@ -81,7 +86,7 @@ class Minesweeper:
                 if (not same) and inbounds:
                     if not self.board[i][j].hide_bomb:
                         self.board[i][j].clicked = True
-                        self.clicked_tiles += 1         
+                        self.clicked_tiles += 1    
 
     def display(self):
         for row in self.board:
