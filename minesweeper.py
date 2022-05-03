@@ -9,6 +9,7 @@ class Minesweeper:
         self.clicked_tiles = 0
         self.safe_tiles = 0
         self.board = self.create_board()
+        self.set_board_indicators()
 
     def menu(self):
         print("CHOOSE THE BOARD DIMENSION: ")
@@ -72,47 +73,37 @@ class Minesweeper:
                     self.safe_tiles += 1
                 tile = Tile(hide_bomb)
                 self.board[i].append(tile)
-        self.find_tile_neighbors()
         return self.board
 
-    def find_tile_neighbors(self):
+    def set_board_indicators(self):
         for i in range(1, self.boardsize[0]+1):
             for j in range(1, self.boardsize[1]+1):
-                tile = self.board[i][j]
-                neighbors = self.get_tile_neighbors( (i,j) )
-                tile.set_neighbors(neighbors)
+                if self.board[i][j].hide_bomb:
+                    continue
+                self.board[i][j] = self.get_num_bomb_around(i,j)
 
-    def get_tile_neighbors(self, tile_pos):
-        neighbors = []
-        for i in range(tile_pos[0]-1, tile_pos[0]+2):
-            for j in range(tile_pos[1]-1, tile_pos[1]+2):
+    def get_num_bomb_around(self, row, col):
+        num_bomb_around = str(0)
+        for i in range(row-1, row+2):
+            for j in range(col-1, col+2):
                 # This boolean will be False if one neighbor of the tile doesn't exist
                 out_of_bounds = i < 1 or i >= self.boardsize[0]+1 or\
                                 j < 1 or j >= self.boardsize[1]+1
                 # This boolean will be True if the neighbor is actually the tile itself 
-                same = (i == tile_pos[0]) and (j == tile_pos[1])
+                same = (i == row) and (j == col)
                 if same or out_of_bounds:
                     continue
-                neighbors.append(self.board[i][j])
-        return neighbors
+                if not isinstance(self.board[i][j], str):
+                    if self.board[i][j].hide_bomb:
+                        num_bomb_around = str(int(num_bomb_around)+1)
+        num_bomb_around = f" {num_bomb_around}"
+        return num_bomb_around
+
 
 class Tile:
 
     def __init__(self, hide_bomb):
         self.hide_bomb = hide_bomb
-        self.neighbors = []
-        self.mine_around = 0
-        self.clicked = False
-        self.flagged = False
-
-    def set_neighbors(self, neighbors_list):
-        # This method receives a list of neighbors from self.board (Minesweeper-object attribute)
-        self.neighbors = neighbors_list
-        print(self.neighbors)
-        for neighbor in self.neighbors:
-            if neighbor.hide_bomb:
-                self.mine_around += 1
-        print(self.mine_around)
 
     def __str__(self):
         bomb_str = "☼" if self.hide_bomb else "◙"
