@@ -171,7 +171,26 @@ def main_menu():
             M = Minesweeper()
             M.start_game()
         elif sel == 2:
-            print("tbd")
+            print()
+            print("""Minesweeper is a game where mines are hidden in a grid of tiles.
+Safe tiles have numbers telling you how many mines touch it. 
+You use the number clues to solve the game by digging all of the safe tiles.
+If you dig a mine you lose the game!
+
+WIN CONDITION:
+The number of undigged tiles is equal to the number of mines on the board.
+
+GAME FLOW:
+At each turn in the game the player is requested to input a set of tile coordinate. 
+Once the tile selected two options is offered to the player:
+    -Dig
+    -Flag/Unflag
+
+The 'Dig' action reveals what is under the tile.
+The 'Flag' action marks the tile as suspect, easing grid navigation.
+A flagged tile can always be unflagged by the player simply by flagging it again.
+
+CHANGELOG 2022-05-04: Flag action not yet implemented""")
         else:
             exit = True
 
