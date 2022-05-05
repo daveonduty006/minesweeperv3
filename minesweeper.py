@@ -37,50 +37,56 @@ class Minesweeper:
         while running:
             print()
             self.display()
-            ij = input("Enter the tile you want to dig into (row,col): ")
-            flag = input("Flag: ")
-            i,j = ij.split(",")
+            ########################
+            flag = input("Do you wish to place/remove a flag? (Y/N): ").upper()
+            flag = True if flag == "Y" else False
+            if flag:
+                ij = input(f"Enter the tile where you want to place/remove "+
+                           f"a flag (row+col): ").replace("+","").upper()
+                i,j = ij[0], ij[1]
+                i = ord(i) - 64 
+                j = int(j)   
+                self.board[i][j].flagged = False if self.board[i][j].flagged else True
+                continue 
+            ########################
+            ij = input("Enter the tile where you want to dig (row+col): ")\
+                .replace("+","").upper()
+            i,j = ij[0], ij[1]
             i = ord(i) - 64 
-            j = int(j)
-            
-            
+            j = int(j)     
+            ########################       
             if not (0 < i <= self.boardsize[0] and 0 < j <= self.boardsize[1]):
                 print()
                 print("Tile out of bounds, try again")
-                print()
-            self.make_move(i,j, flag)
+            self.make_move(i, j)
+            ########################
             if self.game_over:
                 print()
                 print("GAME OVER")
                 print(f"{chr(i+64)}{j} was a mine :(")
-                print()
                 self.board[i][j].clicked = True
                 self.display()
                 running = False
                 continue
-            if self.clicked_tiles == self.safe_tiles:
+            elif self.clicked_tiles == self.safe_tiles:
                 print()
                 print("!!! YOU'RE WINNER !!!")
-                print()
+                for i in range(1, self.boardsize[0]+1):
+                    for j in range(1, self.boardsize[1]+1):
+                        self.board[i][j].clicked = True
                 self.display()
                 running = False 
 
-    def make_move(self, i, j, flag):
-        if  self.board[i][j].clicked:
+    def make_move(self, i, j):
+        if self.board[i][j].clicked:
             print()
             print("You've already dug here, try again")
-            print()
         else:
-            if flag:
-                self.board[i][j].flag = True 
-            elif not flag:
-                self.board[i][j].flag = False  
                 if self.board[i][j].hide_bomb:
                     self.game_over = True
                 elif self.board[i][j].num_ind > 0:
                     self.board[i][j].clicked = True
                     self.clicked_tiles += 1
-        return
 
     def display(self):
         for row in self.board:
@@ -133,16 +139,16 @@ class Tile:
     def __init__(self, hide_bomb):
         self.hide_bomb = hide_bomb
         self.num_ind = 0
-        self.flag = False
+        self.flagged = False
         self.clicked = False
 
     def __str__(self):
-        if not self.clicked and not self.flag:
-            string = " ◙"
-        elif self.flag:
-            string = " †"
-        else: #HERE
-            
+        if not self.clicked:
+            if self.flagged:
+                string = " †"
+            else:
+                string = " ◙"
+        else: #HERE            
             if not self.hide_bomb:
                 if self.num_ind != 0:
                     string = f" {self.num_ind}"
@@ -153,7 +159,7 @@ class Tile:
         return string
 
     def __repr__(self):
-        return f"Tile({self.hide_bomb},{self.num_ind},{self.clicked})"
+        return f"Tile({self.hide_bomb})"
 
 def main_menu():
     exit = False
@@ -175,20 +181,16 @@ def main_menu():
 Safe tiles have numbers telling you how many mines touch it. 
 You use the number clues to solve the game by digging all of the safe tiles.
 If you dig a mine you lose the game!
-
 WIN CONDITION:
 The number of undigged tiles is equal to the number of mines on the board.
-
 GAME FLOW:
 At each turn in the game the player is requested to input a set of tile coordinate. 
 Once the tile selected two options is offered to the player:
     -Dig
     -Flag/Unflag
-
 The 'Dig' action reveals what is under the tile.
 The 'Flag' action marks the tile as suspect, easing grid navigation.
 A flagged tile can always be unflagged by the player simply by flagging it again.
-
 CHANGELOG 2022-05-04: Flag action not yet implemented""")
         else:
             exit = True
