@@ -66,14 +66,15 @@ class Minesweeper:
                 running = False 
 
     def make_move(self, i, j, flag):
-        if self.board[i][j].clicked:
+        if  self.board[i][j].clicked:
             print()
             print("You've already dug here, try again")
             print()
         else:
             if flag:
                 self.board[i][j].flag = True 
-            else:
+            elif not flag:
+                self.board[i][j].flag = False  
                 if self.board[i][j].hide_bomb:
                     self.game_over = True
                 elif self.board[i][j].num_ind > 0:
@@ -141,6 +142,7 @@ class Tile:
         elif self.flag:
             string = " †"
         else: #HERE
+            
             if not self.hide_bomb:
                 if self.num_ind != 0:
                     string = f" {self.num_ind}"
