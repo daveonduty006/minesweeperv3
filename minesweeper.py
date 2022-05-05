@@ -31,21 +31,24 @@ class Minesweeper:
         else:
             bomb_prob = 0.5
         return dim, bomb_prob  
-
+        
     def start_game(self):
         running = True
         while running:
             print()
             self.display()
             ij = input("Enter the tile you want to dig into (row,col): ")
+            flag = input("Flag: ")
             i,j = ij.split(",")
-            i = ord(i) - 64
+            i = ord(i) - 64 
             j = int(j)
+            
+            
             if not (0 < i <= self.boardsize[0] and 0 < j <= self.boardsize[1]):
                 print()
                 print("Tile out of bounds, try again")
                 print()
-            self.make_move(i,j)
+            self.make_move(i,j, flag)
             if self.game_over:
                 print()
                 print("GAME OVER")
@@ -62,17 +65,20 @@ class Minesweeper:
                 self.display()
                 running = False 
 
-    def make_move(self, i, j):
+    def make_move(self, i, j, flag):
         if self.board[i][j].clicked:
             print()
             print("You've already dug here, try again")
             print()
         else:
-            if self.board[i][j].hide_bomb:
-                self.game_over = True
-            elif self.board[i][j].num_ind > 0:
-                self.board[i][j].clicked = True
-                self.clicked_tiles += 1
+            if flag:
+                self.board[i][j].flag = True 
+            else:
+                if self.board[i][j].hide_bomb:
+                    self.game_over = True
+                elif self.board[i][j].num_ind > 0:
+                    self.board[i][j].clicked = True
+                    self.clicked_tiles += 1
         return
 
     def display(self):
@@ -119,19 +125,22 @@ class Minesweeper:
                 if (not same) and inbounds:
                     if self.board[i][j].hide_bomb:
                         num_bomb_around += 1
-        return num_bomb_around
+        return num_bomb_around 
 
 class Tile:
 
     def __init__(self, hide_bomb):
         self.hide_bomb = hide_bomb
         self.num_ind = 0
+        self.flag = False
         self.clicked = False
 
     def __str__(self):
-        if not self.clicked:
+        if not self.clicked and not self.flag:
             string = " ◙"
-        else:
+        elif self.flag:
+            string = " †"
+        else: #HERE
             if not self.hide_bomb:
                 if self.num_ind != 0:
                     string = f" {self.num_ind}"
