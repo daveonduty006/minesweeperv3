@@ -35,6 +35,7 @@ class Minesweeper:
     def start_game(self):
         running = True
         while running:
+            print()
             self.display()
             ij = input("Enter the tile you want to dig into (row,col): ")
             i,j = ij.split(",")
@@ -44,15 +45,16 @@ class Minesweeper:
                 print()
                 print("Tile out of bounds, try again")
                 print()
-                continue
             self.make_move(i,j)
             if self.game_over:
                 print()
                 print("GAME OVER")
                 print(f"{chr(i+64)}{j} was a mine :(")
                 print()
+                self.board[i][j].clicked = True
                 self.display()
                 running = False
+                continue
             if self.clicked_tiles == self.safe_tiles:
                 print()
                 print("!!! YOU'RE WINNER !!!")
@@ -65,33 +67,18 @@ class Minesweeper:
             print()
             print("You've already dug here, try again")
             print()
-            return
         else:
             if self.board[i][j].hide_bomb:
-                self.board[i][j].clicked = True
                 self.game_over = True
             elif self.board[i][j].num_ind > 0:
                 self.board[i][j].clicked = True
-                self.clicked_tiles += 1 
-            elif self.board[i][j].num_ind == 0:
-                self.board[i][j].clicked = True
                 self.clicked_tiles += 1
-                self.recursive_move(i,j)
-    
-    def recursive_move(self, row, col):      
-        for i in range(row-1, row+2):
-            for j in range(col-1, col+2):
-                inbounds = (0 < i <= self.boardsize[0]) and (0 < j <= self.boardsize[1])
-                same = (i == row) and (j == col)
-                if (not same) and inbounds:
-                    if not self.board[i][j].hide_bomb:
-                        self.board[i][j].clicked = True
-                        self.clicked_tiles += 1    
+        return
 
     def display(self):
         for row in self.board:
             for data in row:
-                print(f"{data}", end ="")
+                print(f"{data}", end="")
             print()
 
     def create_board(self):
@@ -119,6 +106,9 @@ class Minesweeper:
                     continue
                 num_ind = self.get_num_bomb_around(i,j)
                 self.board[i][j].num_ind = num_ind
+                if self.board[i][j].num_ind == 0:
+                    self.board[i][j].clicked = True
+                    self.clicked_tiles += 1
 
     def get_num_bomb_around(self, row, col):
         num_bomb_around = 0       
@@ -141,17 +131,15 @@ class Tile:
     def __str__(self):
         if not self.clicked:
             string = " ◙"
-            return string
         else:
             if not self.hide_bomb:
                 if self.num_ind != 0:
                     string = f" {self.num_ind}"
                 else:
                     string = "  "
-                return string
             else: 
                 string = " ☼" 
-                return string
+        return string
 
     def __repr__(self):
         return f"Tile({self.hide_bomb},{self.num_ind},{self.clicked})"
@@ -168,8 +156,8 @@ def main_menu():
             print("3. Quit")
             sel = int(input("Choice: "))
         if sel == 1:
-            M = Minesweeper()
-            M.start_game()
+            minesweeper = Minesweeper()
+            minesweeper.start_game()
         elif sel == 2:
             print()
             print("""Minesweeper is a game where mines are hidden in a grid of tiles.

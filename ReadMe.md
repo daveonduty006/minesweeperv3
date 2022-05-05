@@ -21,9 +21,9 @@ Aucune installation necessaire
 ## Utilisation 
 * Rouler le programme a partir de la consolle(**Main**)
 * Choisir une option parmis le menu (Start, Controls, Top scores, Difficulties...)
-* A l'aide des touches du clavier choisissez un plage soit (lignes, colonne), pour
-reveller celle-ci 
-* Choisissez l'option "Exit" pour pour sortir du menu et mettre fin au programme. 
+* A l'aide des touches du clavier choisissez un plage soit (lignes, colonnes), pour
+reveler celle-ci 
+* Choisissez l'option "Exit" pour sortir du menu et mettre fin au programme. 
 
 ## Auteurs et reconnaissances 
 [Martin Normandin](https://github.com/MartinNormandin) 
