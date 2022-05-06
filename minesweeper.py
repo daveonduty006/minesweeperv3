@@ -38,27 +38,31 @@ class Minesweeper:
             print()
             self.display()
             ########################
-            flag = input("Do you wish to place/remove a flag? (Y/N): ").upper()
-            flag = True if flag == "Y" else False
-            if flag:
-                ij = input(f"Enter the tile where you want to place/remove "+
-                           f"a flag (row+col): ").replace("+","").upper()
-                i,j = ij[0], ij[1]
-                i = ord(i) - 64 
-                j = int(j)   
-                self.board[i][j].flagged = False if self.board[i][j].flagged else True
-                continue 
-            ########################
-            ij = input("Enter the tile where you want to dig (row+col): ")\
-                .replace("+","").upper()
+            ij = input("Where do you want to go? (row+col): ")\
+                .replace(",","").replace(" ","").replace("+","").upper()
             i,j = ij[0], ij[1]
             i = ord(i) - 64 
-            j = int(j)     
-            ########################       
+            j = int(j)
+            ########################
             if not (0 < i <= self.boardsize[0] and 0 < j <= self.boardsize[1]):
                 print()
                 print("Tile out of bounds, try again")
-            self.make_move(i, j)
+                continue                   
+            ########################   
+            sel = 0
+            while not 1 <= sel <= 2:
+                print()
+                print("What do you want to do here?")
+                print("1. Place/Remove a Flag")
+                print("2. Start Digging!")
+                sel = int(input("Choice: "))
+            ########################
+            if sel == 1:
+                self.board[i][j].flagged = False if self.board[i][j].flagged else True
+                continue
+            ########################
+            else:                
+                self.make_move(i, j)
             ########################
             if self.game_over:
                 print()
@@ -68,6 +72,7 @@ class Minesweeper:
                 self.display()
                 running = False
                 continue
+            ########################
             elif self.clicked_tiles == self.safe_tiles:
                 print()
                 print("!!! YOU'RE WINNER !!!")
@@ -185,13 +190,12 @@ WIN CONDITION:
 The number of undigged tiles is equal to the number of mines on the board.
 GAME FLOW:
 At each turn in the game the player is requested to input a set of tile coordinate. 
-Once the tile selected two options is offered to the player:
-    -Dig
-    -Flag/Unflag
+Once the tile is selected two options are offered to the player:
+    -Place/Remove a Flag here
+    -Start Digging here
 The 'Dig' action reveals what is under the tile.
-The 'Flag' action marks the tile as suspect, easing grid navigation.
-A flagged tile can always be unflagged by the player simply by flagging it again.
-CHANGELOG 2022-05-04: Flag action not yet implemented""")
+The 'Flag' action marks the tile as suspect, easing grid analysis.
+A flagged tile can always be unflagged by the player simply by flagging it again.""")
         else:
             exit = True
 
