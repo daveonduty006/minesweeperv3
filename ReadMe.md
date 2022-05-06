@@ -1,41 +1,42 @@
-# MineSweeper :triangular_flag_on_post:
-Projet de fin de session
-
+# Minesweeper :triangular_flag_on_post:
 
 ## Description 
-### Contexte
-    Développement d'un jeu en equipe de 1-3 dont l'execution prend moins de 5 minutes a completer. 
-    Celui-ci doit tenir un niveau de difficulté en conséquence du nombre de membre par equipe. Il
-    doit egalement comporter un menu d'utilisateur, Une condition particuliere donnée par l'ensei-
-    gnant (unique a chaque equipe) et doit utiliser l'approche orientée objet soit OOP. 
-
+### Context
+    This terminal version of the popular video game Minesweeper is a school term project, developed by a 3-person team. 
+    The game is thoroughly playable in 5 minutes and has a player menu. An object-oriented programming (OOP) approach was used during the game development.
+ 
 ### Realisation
-    Interpretation du jeu Démineur (Minesweeper), originalement apparu dans la suite de jeu Microsoft 
-    90. La version developpé tant qu'a elle aura 3 niveaux de difficulté (facile, moyen, difficile) 
-    .Les mecannismes du jeu resteront les memes ainsi que le "Gameplay" a l'exception pres que les 
-    tuiles sont selectionner a l'aide de coordonées x, y et non de la souris.
+    Minesweeper is a game where mines are hidden in a grid of tiles.
+    Safe tiles have numbers telling you how many mines touch it. You use the number clues to solve the game by digging all of the safe tiles.
+    If you dig a mine you lose the game!
+
+    WIN CONDITION:
+    The number of undigged tiles is equal to the number of mines on the board.
+
+    GAME FLOW:
+    At each turn in the game the player is requested to input a set of tile coordinate. 
+    Once the tile is selected two options are offered to the player:
+        -Place/Remove a Flag here
+        -Start Digging here
+    The 'Dig' action reveals what is under the tile, stepping game progression.
+    The 'Flag' action marks the tile as suspect, easing grid analysis.
+    A flagged tile can always be unflagged by the player by simply flagging it again.
+
 
 ## Installation 
-Aucune installation necessaire
+    Requires Python 3
 
-## Utilisation 
-* Rouler le programme a partir de la consolle(**Main**)
-* Choisir une option parmis le menu (Start, Controls, Top scores, Difficulties...)
-* A l'aide des touches du clavier choisissez un plage soit (lignes, colonnes), pour
-reveler celle-ci 
-* Choisissez l'option "Exit" pour sortir du menu et mettre fin au programme. 
-
-## Auteurs et reconnaissances 
+## Authors and Thank-You's 
 [Martin Normandin](https://github.com/MartinNormandin) 
 
 [David Normandin](https://github.com/daveonduty006) 
 
 [Maxime Bellavance](https://github.com/Maxb416) 
 
-Ainsi qu'un remerciement spécial a l'enseignant [Keven Presseau St-Laurent](https://github.com/kpresseau) pour son accompagnement tout au long de la session 
+A very big thank you to our teacher [Keven Presseau St-Laurent](https://github.com/kpresseau) for his wise guidance and epic patience shown in face of asinine newbie questions and shady excuses.
 
 ## Licence 
-Aucune licence
+None
 
-## État du projet 
-Projet Termine
+## State of the Project 
+Ready for evaluation
