@@ -37,7 +37,7 @@ Requires Python 3
 
 [Maxime Bellavance](https://github.com/Maxb416) 
 
-A very big thank you to our teacher [Keven Presseau St-Laurent](https://github.com/kpresseau) for his wise guidance and epic patience shown in face of asinine newbie questions and shady excuses.
+A very big thank you to our teacher [Keven Presseau St-Laurent](https://github.com/kpresseau) for his wise guidance, epic patience shown in the face of asinine newbie questions and comprehension in face of out-of-school life events for some of us.
 
 
 ## Licence 
