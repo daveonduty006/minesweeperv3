@@ -1,5 +1,10 @@
 from board import Board 
 
+
+# The main module, this where the top-level code for the game will be executed.
+# Once the program is launched, a menu is looped back between each rounds.
+# If the player selects option 1, a new minesweeper board is instanciated and we 
+# enter the game loop. 
 exit = False
 while not exit:
     sel = 0

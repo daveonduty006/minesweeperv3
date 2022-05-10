@@ -6,13 +6,15 @@ class Tile:
         self.flagged = False
         self.clicked = False
 
+    # 'Magic' method allowing the tile object to be printed on the screen in one of the following
+    # characters...
     def __str__(self):
         if not self.clicked:
             if self.flagged:
                 string = f" {'†'} "
             else:
                 string = f" {'◙'} "
-        else: #HERE            
+        else:            
             if not self.hide_bomb:
                 if self.num_ind != 0:
                     string = f" {self.num_ind} "
@@ -21,6 +23,3 @@ class Tile:
             else: 
                 string = f" {'☼'} " 
         return string
-
-    def __repr__(self):
-        return f"Tile({self.hide_bomb})"
